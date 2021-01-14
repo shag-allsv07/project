@@ -1,0 +1,10 @@
+addDefaultCharset utf8
+
+#Включает модуль mod_rewrite
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#RewriteRule <regexp> <path> [flags]
+RewriteRule ^(.*)$ index.php?param=$1 [QSA,L]
