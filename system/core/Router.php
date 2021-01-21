@@ -1,5 +1,5 @@
 <?php
-
+namespace system\core;
 
 class Router
 {
@@ -32,10 +32,13 @@ class Router
      */
     public static function checkRoute($url)
     {
+        $url = self::removeQueryString($url);
+
         foreach (self::$routers as $key => $value){
             if (preg_match("#$key#i", $url, $matches)){
                 //pr(self::$routers[$key]);
                 $route = $value;
+
                 foreach ($matches as $key => $match){
                     if (is_string($key)){
                         $route[$key] = $match;
@@ -47,6 +50,7 @@ class Router
                 if(!isset($route['action'])){
                     $route['action'] = 'index';
                 }
+
                 self::$rout = $route;
 
                 return true;
@@ -61,18 +65,32 @@ class Router
     {
         if (self::checkRoute($path)){
             $controller = 'app\controllers\\' . self::$rout['controller'] . 'Controller';
+
             if(class_exists($controller)){
-                $obj = new $controller;
+                $obj = new $controller(self::$rout);
+                $action = self::lStr(self::$rout['action']) . 'Action';
+
+                if(method_exists($obj, $action)){
+                    $obj->$action();
+                }
+                else {
+                    echo 'Метод ' .$action. ' не найден';
+                }
             }
             else {
-                echo 'Контроллер ' .$controller . ' не найден';
+                echo 'Контроллер ' .$controller. ' не найден';
             }
         }
         else {
-            echo '404';
+            http_response_code(404);
+            include '404.html';
         }
     }
 
+    /**
+     * @param $str
+     * @return string|string[]
+     */
     private static function uStr($str)
     {
         $str = str_replace('-', ' ', $str);
@@ -80,6 +98,36 @@ class Router
         $str = str_replace(' ', '', $str);
 
         return $str;
+    }
+
+    /**
+     * метод приводит в нижний регистр первую букву строки
+     * @param $str
+     * @return string
+     */
+    private static function lStr($str)
+    {
+        return lcfirst(self::uStr($str));
+    }
+
+    /**
+     * Метод удаляет из строки явные get параметры (?page=1&....)
+     * @param $url
+     * @return mixed|string
+     */
+    private static function removeQueryString($url)
+    {
+        if($url != ''){
+            $params = explode('&', $url);
+            if(strpos($params[0], '=') === false){
+                return $params[0];
+            }
+            else {
+                return '';
+            }
+        }
+
+        return $url;
     }
 
 }
