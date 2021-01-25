@@ -72,6 +72,7 @@ class Router
 
                 if(method_exists($obj, $action)){
                     $obj->$action();
+                    $obj->getView();
                 }
                 else {
                     echo 'Метод ' .$action. ' не найден';
@@ -111,7 +112,7 @@ class Router
     }
 
     /**
-     * Метод удаляет из строки явные get параметры (?page=1&....)
+     * Метод удаляет из строки явные get параметры (?Page=1&....)
      * @param $url
      * @return mixed|string
      */

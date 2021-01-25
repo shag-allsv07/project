@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL);
 
 require_once '../system/core/functions.php';
 
@@ -6,10 +7,14 @@ use system\core\Router;
 
 $qStr = $_SERVER['QUERY_STRING'];
 
-define("ROOT", '../');
+/**
+ * тоже самое что и ../
+ */
+define("ROOT", dirname(__DIR__));
+define('LAYOUT', 'default');
 
 spl_autoload_register(function ($className){
-    $className = ROOT . str_replace('\\', '/', $className) . '.php';
+    $className = ROOT .'/'. str_replace('\\', '/', $className) . '.php';
 
     if(file_exists($className)) include $className;
 });
@@ -19,8 +24,8 @@ spl_autoload_register(function ($className){
 Router::add(['^$' => ['controller' => 'Main', 'action' => 'index']]);
 Router::add(['^(?P<controller>[a-z0-9-]+)/?(?P<action>[a-z0-9-]+)?$' => []]);
 
-//pr(Router::$routers);
 
 Router::dispatch($qStr);
-//pr(Router::$rout);
+
+
 
