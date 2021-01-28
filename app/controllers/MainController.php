@@ -3,6 +3,7 @@
 
 namespace app\controllers;
 
+use app\models\News;
 use system\core\Controller;
 
 class MainController extends Controller
@@ -11,6 +12,11 @@ class MainController extends Controller
 
     public function indexAction()
     {
+        $news = new News();
+        $arNews = $news->findOne(4);
+        pr($arNews);
+
+        $this->view = 'Test';
         $arr = [
             'n1' => 1,
             'n2' => 2
