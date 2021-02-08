@@ -51,6 +51,10 @@ class Router
                     $route['action'] = 'index';
                 }
 
+                if (!isset($route['prefix'])) {
+                    $route['prefix'] = '';
+                }
+                //pr($route);
                 self::$rout = $route;
 
                 return true;
@@ -64,7 +68,7 @@ class Router
     public static function dispatch($path)
     {
         if (self::checkRoute($path)){
-            $controller = 'app\controllers\\' . self::$rout['controller'] . 'Controller';
+            $controller = 'app\controllers\\' . self::$rout['prefix'] . self::$rout['controller'] . 'Controller';
 
             if(class_exists($controller)){
                 $obj = new $controller(self::$rout);

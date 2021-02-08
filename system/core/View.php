@@ -32,7 +32,7 @@ class View
         // app/view/Main/index
         ob_start();
 
-        $path_view = ROOT . '/app/views/' . $this->route['controller'] . '/' . $this->view . '.php';
+        $path_view = ROOT . '/app/views/' . $this->route['prefix'] . $this->route['controller'] . '/' . $this->view . '.php';
 
         if (file_exists($path_view)){
             require_once $path_view;
