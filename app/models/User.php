@@ -15,17 +15,24 @@ class User extends Model
      */
     public function auth($login, $password)
     {
-        $pass = $this->db->query("SELECT `password` FROM {$this->table} WHERE `login` = ?", [$login]);
-        var_dump($pass);
-        if (password_verify($password, $pass[0]['password'])) {
-            $res = $this->db->query("SELECT * FROM {$this->table} WHERE `login` = ? AND `password` = ?", [$login, $pass]);
-            var_dump($res);
-            if (!empty($res[0])) {
-                return $res[0]['id'];
-            }
+        // $pass = $this->db->query("SELECT `password` FROM {$this->table} WHERE `login` = ?", [$login]);
+        // if (password_verify($password, $pass[0]['password'])) {
+        //     $res = $this->db->query("SELECT * FROM {$this->table} WHERE `login` = ? AND `password` = ?", [$login, $pass]);
+        //     //var_dump($res);
+        //     if (!empty($res[0])) {
+        //         return $res[0]['id'];
+        //     }
 
-            return false;
+        //     return false;
+        // }
+
+        $pass = md5($password);
+        $res = $this->db->query("SELECT * FROM {$this->table} WHERE `login` = ? AND `password` = ?", [$login, $pass]);
+
+        if (!empty($res[0])){
+            return $res[0]['id'];
         }
+        return false;
     }
 
     public function adminLogin($id)

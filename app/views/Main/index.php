@@ -30,5 +30,7 @@ $count = 1;
 <? $count++; ?>
 <? endforeach; ?>
 
+<?=$pagination?>
+
 </div>
 

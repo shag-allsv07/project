@@ -27,7 +27,7 @@ class MainController extends AppController
                 $id = $user->auth($_POST['login'], $_POST['password']);
                 if (false !== $id) {
                     $user->adminLogin($id);
-                    header("Location:/admin");
+                    header("Location: /admin");
                     die();
                 }
                 else {
