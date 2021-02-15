@@ -1,11 +1,14 @@
 <?php
+
 error_reporting(E_ALL);
 
 session_start();
 
 require_once '../system/core/functions.php';
+require_once '../vendor/autoload.php';
 
 use system\core\Router;
+use Intervention\Image\ImageManager;
 
 $qStr = $_SERVER['QUERY_STRING'];
 
@@ -15,11 +18,13 @@ $qStr = $_SERVER['QUERY_STRING'];
 define("ROOT", dirname(__DIR__));
 define('LAYOUT', 'default');
 
-spl_autoload_register(function ($className){
-    $className = ROOT .'/'. str_replace('\\', '/', $className) . '.php';
+//spl_autoload_register(function ($className){
+//    $className = ROOT .'/'. str_replace('\\', '/', $className) . '.php';
+//
+//    if(file_exists($className)) include $className;
+//});
 
-    if(file_exists($className)) include $className;
-});
+
 
 //Router::add(['^(?P<controller>[a-z0-9-]+)/(?P<action>[a-z0-9-]+)/(?P<alias>[a-z0-9-]+)$' => []]);
 

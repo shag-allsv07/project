@@ -1,0 +1,13 @@
+{
+    "name": "administrator/project",
+    "require": {
+        "intervention/image": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "system\\core\\" : "system/core",
+            "system\\libs\\" : "system/libs",
+            "app\\" : "app"
+        }
+    }
+}
