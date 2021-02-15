@@ -1,20 +1,26 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: User
+ * Date: 06.02.2021
+ * Time: 14:17
+ */
 
 namespace system\libs;
 
 
 class Pagination
 {
-    public $curPage; // текущая страница
-    public $perPage; // по сколько записей на страницу
+    public $curPage; // текущая стр
+    public $perPage; // по сколько записей на стр
     public $total; // число записей
-    public $countPages; // число страниц
+    public $countPages; // число стр
     public $uri;
 
     /**
      * Pagination constructor.
-     * @param $page - параметр $_GET['page'] - что идет после ?
-     * @param $perPage 
+     * @param $page - $_GET['page]
+     * @param $perPage
      * @param $total
      * @param $countPages
      * @param $uri
@@ -28,24 +34,18 @@ class Pagination
         $this->uri = $this->getParams();
     }
 
-    /**
-     * получение количества страниц
-     */
     public function getCountPages()
     {
         return ceil($this->total / $this->perPage) ?: 1;
     }
 
-
-    /** 
-     * Получение текущей страницы
-     */
     public function getCurrentPage($page)
     {
         //$page = intval($page) > 0 ?: 1;
         if($page > $this->countPages){
             $page = $this->countPages;
         }
+
         return $page;
     }
 
@@ -59,16 +59,17 @@ class Pagination
     }
 
     /**
-     * получает uri . сохраняет (позволяет не поретяь остальные параметры) параметры в адресной строке
+     * сохраняет параметры адресной строки
+     * @return array|string
      */
     public function getParams()
     {
         $uri = $_SERVER['REQUEST_URI'];
-        $arrUri = explode("?", $uri);
-        $uri = $arrUri[0] . "?";
-        
-        if(isset($uri[1]) && $arrUri[1] != ''){
-            $params = explode("&", $arrUri[1]);
+        $ar_uri = explode("?", $uri);
+        $uri = $ar_uri[0] . "?";
+
+        if(isset($ar_uri[1]) && $ar_uri[1] != ''){
+            $params = explode("&", $ar_uri[1]);
             foreach ($params as $param){
                 if(!preg_match("/page=/", $param)){
                     $uri .= $param . '&';
@@ -84,7 +85,8 @@ class Pagination
     }
 
     /**
-     * html код пагинации
+     * html - код навигации
+     * @return string
      */
     public function getHtml()
     {
@@ -98,39 +100,40 @@ class Pagination
         $page2right = null;
 
         if($this->curPage > 1){
-            $back = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->curPage - 1) . '">&lt;</a></li>';
+            $back = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage - 1) . '">&lt;</a></li>';
         }
 
         if($this->curPage < $this->countPages){
-            $forward = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->curPage + 1) . '">&gt;</a></li>';
+            $forward = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage + 1) . '">&gt;</a></li>';
         }
 
         if($this->curPage > 3){
-            $startpage = '<li><a class="nav-link" href="' . $this->uri . 'page=1">&laquo;</a></li>';
+            $startpage = '<li><a class="page-link" href="' . $this->uri . 'page=1">&laquo;</a></li>';
         }
 
         if($this->curPage < ($this->countPages - 2)){
-            $endpage = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->countPages) . '">&raquo;</a></li>';
+            $endpage = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->countPages) . '">&raquo;</a></li>';
         }
 
         if($this->curPage + 1 <= $this->countPages){
-            $page1right = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->countPages + 1) . '">' . ($this->countPages + 1) . '</a></li>';
+            $page1right = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage + 1) . '">' . ($this->curPage + 1) . '</a></li>';
         }
 
         if($this->curPage + 2 <= $this->countPages){
-            $page2right = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->countPages + 2) . '">' . ($this->countPages + 2) . '</a></li>';
+            $page2right = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage + 2) . '">' . ($this->curPage + 2) . '</a></li>';
         }
 
-        if($this->curPage - 1 > $this->countPages){
-            $page1left = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->countPages - 1) . '">' . ($this->countPages - 1) . '</a></li>';
+        if($this->curPage - 1 > 0){
+            $page1left = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage - 1) . '">' . ($this->curPage - 1) . '</a></li>';
         }
 
-        if($this->curPage - 2 > $this->countPages){
-            $page2left = '<li><a class="nav-link" href="' . $this->uri . 'page=' . ($this->countPages - 2) . '">' . ($this->countPages - 2) . '</a></li>';
+        if($this->curPage - 2 > 0){
+            $page2left = '<li><a class="page-link" href="' . $this->uri . 'page=' . ($this->curPage - 2) . '">' . ($this->curPage - 2) . '</a></li>';
         }
+
 
         return '<ul class="pagination">'.
-            $startpage.$back.$page2left.$page1left.'<li class="active"><a>'.$this->curPage.'</a></li>'.
+            $startpage.$back.$page2left.$page1left.'<li class="page-item active"><span class="page-link">'.$this->curPage.'</span></li>'.
             $page1right.$page2right.$forward.$endpage.'</ul>';
     }
 }
